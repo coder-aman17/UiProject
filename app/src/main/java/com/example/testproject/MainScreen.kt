@@ -1,4 +1,5 @@
 import android.widget.Toast
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
@@ -7,11 +8,13 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
@@ -19,6 +22,7 @@ import com.example.testproject.BottomAppBar
 import com.example.testproject.ChatScreen
 import com.example.testproject.Items
 import com.example.testproject.PurchaseScreen
+import com.example.testproject.R
 import com.example.testproject.ReportScreen
 import com.example.testproject.SaleScreen
 import com.example.testproject.Screens
@@ -36,8 +40,8 @@ fun MainScreen() {
         bottomBar = { BottomAppBar() },
         floatingActionButton = {
             FloatingActionButton(onClick = { Toast.makeText(context,"FloatingActionButton", Toast.LENGTH_SHORT).show()}) {
-                Icon(Icons.Default.Add, contentDescription = null,
-                )
+                Image(painter = painterResource(R.drawable.invoice_), contentDescription = "invoice")
+                Text(text = "+")
             }
         }
     ) { paddingValues ->

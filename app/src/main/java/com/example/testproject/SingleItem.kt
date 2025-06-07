@@ -1,7 +1,10 @@
 package com.example.testproject
 
+import android.graphics.Bitmap
 import android.graphics.drawable.Icon
 import android.widget.Toast
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -15,12 +18,15 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.BottomAppBar
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.HorizontalDivider
@@ -31,8 +37,10 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -53,6 +61,16 @@ import androidx.navigation.compose.rememberNavController
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TopAppBar() {
+    var capturedImage by remember { mutableStateOf<Bitmap?>(null) }
+
+    // Camera launcher
+    val cameraLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.TakePicturePreview()
+    ) { bitmap: Bitmap? ->
+        if (bitmap != null) {
+            capturedImage = bitmap
+        }
+    }
     val context = LocalContext.current.applicationContext
     TopAppBar(
         title = { Text(text = "Hi Praveen!") },
@@ -63,7 +81,7 @@ fun TopAppBar() {
             actionIconContentColor = Color.White
 
         ), actions = {
-            IconButton(onClick = { Toast.makeText(context,"Camera", Toast.LENGTH_SHORT).show()}) {
+            IconButton(onClick = { cameraLauncher.launch(null)}) {
                 Icon(painter = painterResource(R.drawable.camera), contentDescription = null)
             }
             IconButton(onClick = { Toast.makeText(context,"barcode", Toast.LENGTH_SHORT).show()}) {
@@ -154,76 +172,87 @@ fun BottomAppBar(modifier: Modifier = Modifier) {
 }
 @Composable
 fun singleitem(data: Itemss) {
-    Row(
+    Card(
         modifier = Modifier
             .fillMaxWidth()
-            .background(color = Color.White)
-            .padding(5.dp),
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.SpaceBetween
+            .padding(start = 16.dp, end = 16.dp, top = 5.dp, bottom = 5.dp),
+        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
+        colors = CardDefaults.cardColors(containerColor = androidx.compose.ui.graphics.Color.White),
+        shape = RoundedCornerShape(12.dp)
     ) {
-        Icon(
-            painter = painterResource(data.Icon),
-            contentDescription = null,
-            tint = data.color,
-            modifier = Modifier
-                .size(50.dp)
-                .clip(CircleShape)
-                .border(1.dp, data.color, CircleShape)
-                .padding(10.dp)
-        )
 
-        Column(
+        Row(
             modifier = Modifier
-                .weight(1f)
-                .padding(start = 10.dp)
+                .fillMaxWidth()
+                .background(color = Color.White)
+                .padding(1.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            Text(
-                text = data.name,
-                fontSize = 18.sp,
-                fontWeight = FontWeight.Bold
+            Icon(
+                painter = painterResource(data.Icon),
+                contentDescription = null,
+                tint = data.color,
+                modifier = Modifier
+                    .size(50.dp)
+                    .clip(CircleShape)
+                    .border(1.dp, data.color, CircleShape)
+                    .padding(10.dp)
             )
-            Text(text = data.desciprtion    )
-        }
 
-        Column(
-            modifier = Modifier
-                .padding(10.dp),
-            horizontalAlignment = Alignment.End
-        ) {
-            Row(
-                verticalAlignment = Alignment.CenterVertically
+            Column(
+                modifier = Modifier
+                    .weight(1f)
+                    .padding(start = 10.dp)
             ) {
-                if (data.pinIcon) {
-                    Icon(
-                        painter = painterResource(R.drawable.pinicon),
-                        contentDescription = "pinIcon",
-                        tint = Color.Red,
-                        modifier = Modifier
-                            .size(16.dp)
-                            .padding(top = 2.dp)
+                Text(
+                    text = data.name,
+                    fontSize = 18.sp,
+                    fontWeight = FontWeight.Bold
+                )
+                Text(text = data.desciprtion)
+            }
+
+            Column(
+                modifier = Modifier
+                    .padding(10.dp),
+                horizontalAlignment = Alignment.End
+            ) {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    if (data.pinIcon) {
+                        Icon(
+                            painter = painterResource(R.drawable.pinicon),
+                            contentDescription = "pinIcon",
+                            tint = Color.Red,
+                            modifier = Modifier
+                                .size(16.dp)
+                                .padding(top = 2.dp)
+                        )
+                    }
+                    Text(
+                        text = data.date,
+                        modifier = Modifier.padding(end = if (data.pinIcon) 4.dp else 0.dp)
                     )
+
                 }
                 Text(
-                    text = data.date,
-                    modifier = Modifier.padding(end = if (data.pinIcon) 4.dp else 0.dp)
+                    text = data.price,
+                    fontSize = 15.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = Color.Blue,
+                    modifier = Modifier.padding(5.dp)
                 )
-
             }
-            Text(
-                text = data.price,
-                fontSize = 15.sp,
-                fontWeight = FontWeight.Bold,
-                color = Color.Blue,
-                modifier = Modifier.padding(5.dp)
-            )
         }
+        HorizontalDivider(thickness = 1.dp, color = Color.LightGray)
     }
-    HorizontalDivider(thickness = 1.dp, color = Color.LightGray)
 }
 
 @Composable
 fun Items(modifier: Modifier = Modifier) {
+
 
    val list =  listOf(
        Itemss(
@@ -296,27 +325,33 @@ fun Items(modifier: Modifier = Modifier) {
 
        )
 
+
     LazyColumn (
         modifier = Modifier
             .fillMaxSize()
             .padding(5.dp)
 
     ){
-
+        item {
+            SearchBar()
+        }
         items (list){item->
+
             singleitem(item)
 
 
 
         }
     }
+
+
     
 }
 
 @Preview
 @Composable
 private fun SingleItemPreview() {
-    BottomAppBar()
+   Items()
 }
 
 data class Itemss (

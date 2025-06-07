@@ -61,5 +61,10 @@ dependencies {
     val nav_version = "2.9.0"
 
     // Jetpack Compose integration
-    implementation("androidx.navigation:navigation-compose:$nav_version")
+    implementation("androidx.navigation:navigation-compose:$nav_version"
+    )
+
+        implementation ("androidx.activity:activity-compose:1.7.2")
+        implementation ("androidx.core:core-ktx:1.10.1")
+
 }
