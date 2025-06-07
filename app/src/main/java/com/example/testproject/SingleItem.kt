@@ -11,8 +11,10 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
@@ -175,7 +177,7 @@ fun singleitem(data: Itemss) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(start = 16.dp, end = 16.dp, top = 5.dp, bottom = 5.dp),
+            .padding(start = 16.dp, end = 16.dp, top = 5.dp),
         elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
         colors = CardDefaults.cardColors(containerColor = androidx.compose.ui.graphics.Color.White),
         shape = RoundedCornerShape(12.dp)
@@ -183,7 +185,7 @@ fun singleitem(data: Itemss) {
 
         Row(
             modifier = Modifier
-                .fillMaxWidth()
+                .fillMaxWidth().padding(start = 10.dp)
                 .background(color = Color.White)
                 .padding(1.dp),
             verticalAlignment = Alignment.CenterVertically,
@@ -342,7 +344,11 @@ fun Items(modifier: Modifier = Modifier) {
 
 
         }
+        item {
+            Spacer(modifier = Modifier.height(100.dp))
+        }
     }
+
 
 
     
