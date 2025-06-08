@@ -19,7 +19,7 @@ fun Home(modifier: Modifier = Modifier) {
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Text(text = "This is Home Screen")
+            Items()
         }
     }
 

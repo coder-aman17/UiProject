@@ -38,6 +38,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.testproject.BottomAppBar
 import com.example.testproject.ChatScreen
+import com.example.testproject.Home
 import com.example.testproject.Items
 import com.example.testproject.PurchaseScreen
 import com.example.testproject.R
@@ -51,6 +52,7 @@ import kotlinx.coroutines.flow.combine
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MainScreen() {
+
     val navController = rememberNavController()
     val selected = remember { mutableStateOf(Icons.Default.Home) }
     val context = LocalContext.current.applicationContext
@@ -61,7 +63,7 @@ fun MainScreen() {
 
     Scaffold(
         topBar = { TopAppBar() },
-        bottomBar = { BottomAppBar() },
+        bottomBar = { BottomAppBar(navController) },
         floatingActionButton = {
             FloatingActionButton(onClick = {
                 showSheetState = true
@@ -79,7 +81,7 @@ fun MainScreen() {
         ) {
             composable(Screens.SaleScreen.Screen) { SaleScreen() }
             composable(Screens.PurchaseScreen.Screen) { PurchaseScreen() }
-            composable(Screens.Home.Screen) { Items() } // Your LazyColumn
+            composable(Screens.Home.Screen) { Home() }
             composable(Screens.ReportScreen.Screen) { ReportScreen() }
             composable(Screens.ChatScreen.Screen) { ChatScreen() }
             composable(Screens.TransactionScreen.Screen) { TransactionScreen() }
@@ -91,13 +93,18 @@ fun MainScreen() {
         ModalBottomSheet(onDismissRequest = {showSheetState = false},
             sheetState = sheetState) {
             Column (
-                modifier = Modifier.fillMaxWidth().padding(18.dp),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(18.dp),
                 verticalArrangement = Arrangement.spacedBy(18.dp)
             ){
-                BottomSheetItem(Icon = Icons.Default.Info, title = "Show Details") {
-                    showSheetState = true
-                    navController.navigate(Screens.TransactionScreen.Screen)
-                }
+                TransactionScreen()
+//                BottomSheetItem(Icon = Icons.Default.Info, title = "Show Details") {
+//                    showSheetState = false
+//                    Toast.makeText(context, "Navigating to Transaction Screen", Toast.LENGTH_SHORT)
+//                        .show()
+//                    navController.navigate(Screens.TransactionScreen.Screen)
+//                }
             }
 
 
@@ -106,19 +113,5 @@ fun MainScreen() {
     }
 
 }
-
-@Composable
-fun BottomSheetItem(Icon: ImageVector, title: String, onClick:()->Unit) {
-    Row (
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.spacedBy(12.dp),
-        modifier = Modifier.clickable{onClick}
-    ){
-        Icon(Icon, contentDescription = null)
-        Text(text = title, color = Color.Blue, fontSize = 22.sp)
-    }
-
-}
-
 
 

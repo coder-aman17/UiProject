@@ -1,7 +1,6 @@
 package com.example.testproject
 
 import android.graphics.Bitmap
-import android.graphics.drawable.Icon
 import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -53,11 +52,10 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.navigation.NavHost
+import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -101,9 +99,8 @@ fun TopAppBar() {
 
 
 @Composable
-fun BottomAppBar(modifier: Modifier = Modifier) {
+fun BottomAppBar(navController: NavController, modifier: Modifier = Modifier) {
     val context = LocalContext.current.applicationContext
-    val navController = rememberNavController()
     val selected = remember {
         mutableStateOf(Icons.Default.Home)
     }
@@ -117,7 +114,9 @@ fun BottomAppBar(modifier: Modifier = Modifier) {
                     navController.navigate(Screens.SaleScreen.Screen) {
                         popUpTo(0)
                     }
-                }, modifier = Modifier.weight(1f).size(200.dp)) {
+                }, modifier = Modifier
+                    .weight(1f)
+                    .size(200.dp)) {
                     Icon(painter = painterResource(R.drawable.menu___home), contentDescription = null,
 
                     )
@@ -127,7 +126,9 @@ fun BottomAppBar(modifier: Modifier = Modifier) {
                     navController.navigate(Screens.PurchaseScreen.Screen) {
                         popUpTo(0)
                     }
-                }, modifier = Modifier.weight(1f).size(200.dp)) {
+                }, modifier = Modifier
+                    .weight(1f)
+                    .size(200.dp)) {
                     Icon(painter = painterResource(R.drawable.purchase), contentDescription = null,
                     )
 
@@ -137,7 +138,9 @@ fun BottomAppBar(modifier: Modifier = Modifier) {
                     navController.navigate(Screens.Home.Screen) {
                         popUpTo(0)
                     }
-                }, modifier = Modifier.weight(1f).size(200.dp)) {
+                }, modifier = Modifier
+                    .weight(1f)
+                    .size(200.dp)) {
                     Image(painter = painterResource(R.drawable.home), contentDescription = "home",
                     )
                 }
@@ -145,7 +148,9 @@ fun BottomAppBar(modifier: Modifier = Modifier) {
                     navController.navigate(Screens.ReportScreen.Screen) {
                         popUpTo(0)
                     }
-                }, modifier = Modifier.weight(1f).size(200.dp)) {
+                }, modifier = Modifier
+                    .weight(1f)
+                    .size(200.dp)) {
                     Icon(painter = painterResource(R.drawable.report), contentDescription = null,
                     )
 
@@ -154,7 +159,9 @@ fun BottomAppBar(modifier: Modifier = Modifier) {
                     navController.navigate(Screens.ChatScreen.Screen) {
                         popUpTo(0)
                     }
-                }, modifier = Modifier.weight(1f).size(200.dp)) {
+                }, modifier = Modifier
+                    .weight(1f)
+                    .size(200.dp)) {
                     Icon(painter = painterResource(R.drawable.chat), contentDescription = null,
                     )
 
@@ -185,7 +192,8 @@ fun singleitem(data: Itemss) {
 
         Row(
             modifier = Modifier
-                .fillMaxWidth().padding(start = 10.dp)
+                .fillMaxWidth()
+                .padding(start = 10.dp)
                 .background(color = Color.White)
                 .padding(1.dp),
             verticalAlignment = Alignment.CenterVertically,
