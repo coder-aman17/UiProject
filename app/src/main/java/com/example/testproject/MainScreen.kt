@@ -18,12 +18,17 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.ModalDrawerSheet
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarDuration
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.SnackbarResult
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -33,6 +38,8 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
@@ -45,31 +52,63 @@ import com.example.testproject.R
 import com.example.testproject.ReportScreen
 import com.example.testproject.SaleScreen
 import com.example.testproject.Screens
-import com.example.testproject.TopAppBar
 import com.example.testproject.TransactionScreen
-import kotlinx.coroutines.flow.combine
+import com.example.testproject.TopAppBar
+import com.example.testproject.viewModels.TransactionScreenViewmodel
+import kotlinx.coroutines.launch
+import androidx.compose.runtime.collectAsState
+import com.example.testproject.network.ApiService
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MainScreen() {
+fun MainScreen(viewModel: TransactionScreenViewmodel = viewModel()) {
 
     val navController = rememberNavController()
     val selected = remember { mutableStateOf(Icons.Default.Home) }
     val context = LocalContext.current.applicationContext
-    var sheetState = rememberModalBottomSheetState()
-    var showSheetState by remember {
-        mutableStateOf(false)
-    }
+    val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
+    val showSheetState by viewModel.isBottomSheetVisible.collectAsState()
+    val scope = rememberCoroutineScope()
+    val snackBarHostState = remember { SnackbarHostState() }
+
 
     Scaffold(
         topBar = { TopAppBar() },
         bottomBar = { BottomAppBar(navController) },
+        snackbarHost = {
+            SnackbarHost(hostState = snackBarHostState)
+        },
         floatingActionButton = {
             FloatingActionButton(onClick = {
-                showSheetState = true
+                scope.launch {
+                    val result = snackBarHostState
+                        .showSnackbar(
+                            message = "Snackbar",
+                            actionLabel = "Action",
+                            duration = SnackbarDuration.Indefinite
+                        )
+                    when (result) {
+                        SnackbarResult.ActionPerformed -> {
+                            Toast.makeText(context, "Action performed", Toast.LENGTH_SHORT).show()
+                        }
+                        SnackbarResult.Dismissed -> {
+                            Toast.makeText(context, "Snackbar dismissed", Toast.LENGTH_SHORT).show()
+                        }
+                    }
+                }
 
             }) {
-                Image(painter = painterResource(R.drawable.invoice_), contentDescription = "invoice")
+                Image(
+                    painter = painterResource(R.drawable.invoice_),
+                    contentDescription = "invoice",
+                    modifier = Modifier
+                        .clickable(
+                            onClick = {
+                                viewModel.showBottomSheet()
+                                viewModel.showBottomSheetData()
+                            }
+                        )
+                )
 
             }
         }
@@ -84,13 +123,14 @@ fun MainScreen() {
             composable(Screens.Home.Screen) { Home() }
             composable(Screens.ReportScreen.Screen) { ReportScreen() }
             composable(Screens.ChatScreen.Screen) { ChatScreen() }
-            composable(Screens.TransactionScreen.Screen) { TransactionScreen() }
+            composable(Screens.TransactionScreen.Screen) { TransactionScreen(viewModel = viewModel) }
 
         }
     }
 
     if(showSheetState){
-        ModalBottomSheet(onDismissRequest = {showSheetState = false},
+        ModalBottomSheet(
+            onDismissRequest = { viewModel.hideBottomSheet() },
             sheetState = sheetState) {
             Column (
                 modifier = Modifier
@@ -98,20 +138,9 @@ fun MainScreen() {
                     .padding(18.dp),
                 verticalArrangement = Arrangement.spacedBy(18.dp)
             ){
-                TransactionScreen()
-//                BottomSheetItem(Icon = Icons.Default.Info, title = "Show Details") {
-//                    showSheetState = false
-//                    Toast.makeText(context, "Navigating to Transaction Screen", Toast.LENGTH_SHORT)
-//                        .show()
-//                    navController.navigate(Screens.TransactionScreen.Screen)
-//                }
+                TransactionScreen(viewModel = viewModel)
             }
-
-
-
         }
     }
 
 }
-
-
