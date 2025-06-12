@@ -1,4 +1,4 @@
-package com.example.testproject
+package com.example.testproject.screens
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -10,7 +10,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 
 @Composable
-fun Home(modifier: Modifier = Modifier) {
+fun ChatScreen(modifier: Modifier = Modifier) {
     Box (
         modifier = Modifier.fillMaxSize()
     ){
@@ -19,7 +19,7 @@ fun Home(modifier: Modifier = Modifier) {
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Items()
+            Text(text = "This is Chat Screen")
         }
     }
 

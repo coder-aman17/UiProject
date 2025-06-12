@@ -1,6 +1,4 @@
-package com.example.testproject
-
-import androidx.compose.ui.graphics.Color
+package com.example.testproject.DataClass
 
 data class Item(
     var name: String,

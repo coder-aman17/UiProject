@@ -1,12 +1,9 @@
 package com.example.testproject.viewModels
 
-import androidx.compose.material3.BottomAppBarState
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.lifecycle.ViewModel
-import com.example.testproject.Item
+import com.example.testproject.DataClass.Item
 import com.example.testproject.R
-import com.example.testproject.Screens.TransactionScreen
-import com.example.testproject.Section
+import com.example.testproject.DataClass.Section
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow

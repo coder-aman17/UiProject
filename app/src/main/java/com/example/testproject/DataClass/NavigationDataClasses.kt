@@ -1,6 +1,4 @@
-package com.example.testproject
-
-import kotlinx.serialization.Serializable
+package com.example.testproject.DataClass
 
 sealed class Screens(val Screen: String ){
     data object SaleScreen: Screens("sale")
